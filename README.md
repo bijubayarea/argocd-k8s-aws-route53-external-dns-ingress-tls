@@ -694,4 +694,28 @@ terraform destroy test-terraform-s3-remote-state
 
 ```
 
+## Route53 A record auto deleted
 
+external-dns is set to policy [- --policy=sync ] instead of [--policy=upsert-only]
+Please see file argocd-application-set/boot-strap-apps/external-dns/deployment-external-dns.yaml
+
+So when the test-apps are deleted, the A records in Route53 is also auto deleted
+```
+
+$ k logs -n external-dns external-dns-5646459f84-kjzzt
+
+time="2022-10-30T19:57:38Z" level=info msg="Instantiating new Kubernetes client"
+time="2022-10-30T19:57:38Z" level=info msg="Using inCluster-config based on serviceaccount-token"
+time="2022-10-30T19:57:38Z" level=info msg="Created Kubernetes client https://172.20.0.1:443"
+time="2022-10-30T19:57:45Z" level=info msg="Applying provider record filter for domains: [bijubayarea.tk. .bijubayarea.tk.]"
+time="2022-10-30T19:57:45Z" level=info msg="Desired change: DELETE echo1.bijubayarea.tk A [Id: /hostedzone/Z0401868YSGSUUY2AFTH]"
+time="2022-10-30T19:57:45Z" level=info msg="Desired change: DELETE echo1.bijubayarea.tk TXT [Id: /hostedzone/Z0401868YSGSUUY2AFTH]"
+time="2022-10-30T19:57:45Z" level=info msg="Desired change: DELETE echo2.bijubayarea.tk A [Id: /hostedzone/Z0401868YSGSUUY2AFTH]"
+time="2022-10-30T19:57:45Z" level=info msg="Desired change: DELETE echo2.bijubayarea.tk TXT [Id: /hostedzone/Z0401868YSGSUUY2AFTH]"
+time="2022-10-30T19:57:45Z" level=info msg="Desired change: DELETE website.bijubayarea.tk A [Id: /hostedzone/Z0401868YSGSUUY2AFTH]"
+time="2022-10-30T19:57:45Z" level=info msg="Desired change: DELETE website.bijubayarea.tk TXT [Id: /hostedzone/Z0401868YSGSUUY2AFTH]"
+time="2022-10-30T19:57:45Z" level=info msg="6 record(s) in zone bijubayarea.tk. [Id: /hostedzone/Z0401868YSGSUUY2AFTH] were successfully updated"
+```
+
+
+![](https://github.com/bijubayarea/argocd-k8s-aws-route53-external-dns-ingress-tls/blob/main/images/Route53_config_post_app_delete.png)

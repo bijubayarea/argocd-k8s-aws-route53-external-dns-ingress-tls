@@ -9,7 +9,7 @@ spec:
       repoURL: https://github.com/bijubayarea/argocd-k8s-aws-route53-external-dns-ingress-tls.git
       revision: HEAD
       directories:
-      - path: application-set/test-apps/*
+      - path: argocd-application-set/test-apps/*
   template:      
     metadata:
       name: '{{path.basename}}'

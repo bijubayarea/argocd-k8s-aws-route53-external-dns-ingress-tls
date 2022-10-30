@@ -57,6 +57,12 @@ In the step, terraform is used to create
 - IAM role-policy attachment to attach roles/policy
 - Kubernetes service account to assume IAM role
 
+```
+terraform -chdir=./terraform-aws-route53/ init
+terraform -chdir=./terraform-aws-route53/ plan
+terraform -chdir=./terraform-aws-route53/ apply -auto-approve
+```
+
 ## Deploy argoCD
 
 Install Argo CD
@@ -690,6 +696,7 @@ kubectl delete namespace argocd
 ```
 
 ```
+terraform -chdir=./terraform-aws-route53/ apply -auto-approve
 terraform destroy test-terraform-eks-cluster
 terraform destroy test-terraform-s3-remote-state
 

@@ -6,7 +6,7 @@ metadata:
 spec:
   generators:
   - git:
-      repoURL: https://github.com/bijubayarea/argocd-k8s-cluster-bootstrap.git
+      repoURL: https://github.com/bijubayarea/argocd-k8s-aws-route53-external-dns-ingress-tls.git
       revision: HEAD
       directories:
       - path: application-set/boot-strap-apps/*
@@ -20,7 +20,7 @@ spec:
 
       # Source of the application manifests
       source:
-        repoURL: https://github.com/bijubayarea/argocd-k8s-cluster-bootstrap.git
+        repoURL: https://github.com/bijubayarea/argocd-k8s-aws-route53-external-dns-ingress-tls.git
         targetRevision: HEAD
         path: '{{path}}'
       

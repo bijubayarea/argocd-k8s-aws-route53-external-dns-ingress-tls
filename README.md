@@ -41,7 +41,7 @@ ExternalDNS synchronizes exposed Kubernetes Services and Ingresses with DNS prov
 ** VERY IMPORTANT **
 - argoCD app-set (boot-strap) auto synch should disabled
 - First sych "ingress-nginx" app, wait 2 mins
-- wait for ingress-controller's load balanacer  to come up  
+- wait for ingress-controller's load balanacer to come up and check browser access to LB (`k get svc -n ingress-nginx ingress-nginx-controller`)
 - update AWS Route53 A record "website.bijubayarea.tk" with ingress-controller's load balanacer
 - synch "cert-manager"
 - synch "external-dns"
@@ -122,7 +122,7 @@ Install the App-set either using following ARGO CLI or from  web interface from 
 ** VERY IMPORTANT **
 - argoCD app-set (boot-strap) auto synch should disabled
 - First sych "ingress-nginx" app, wait 2 mins, 
-- wait for ingress-controller's load balanacer  to come up  
+- wait for ingress-controller's load balanacer  to come up and check browser access to LB (`k get svc -n ingress-nginx ingress-nginx-controller`)
 - synch "external-dns", update AWS Route53 A record "website.bijubayarea.tk" with ingress-controller's load balanacer
 - synch "cert-manager"
 
@@ -139,7 +139,7 @@ argocd app create boot-strap --project default --sync-policy auto --auto-prune -
 ## CONFIGURING THE EXTERNAL DNS
 In short, external DNS is a pod running in your EKS cluster which watches over all your ingresses. When it detects an ingress with a host specified, it automatically picks up the hostname as well as the endpoint and creates a record for that resource in Route53. If the host is changed or deleted, external DNS will reflect the change immediately in Route53.
 
-The next steps are two:
+The next steps are :
 
 Configuring the permissions to give access to Route53
 Deploying the External DNS. ExternalDNS reads the ingresses DNS hostnames (website.bijubayarea.tk, echo1.bijubayarea.tk & 
@@ -440,7 +440,7 @@ $ kubectl describe certificates
 
 $ k -n http-echo get certificates
 NAME            READY   SECRET          AGE
-http-echo-tls   False   http-echo-tls   65m
+http-echo-tls   True    http-echo-tls   2m37s
 
 
 $ k -n http-echo describe  certificates http-echo-tls
@@ -451,52 +451,22 @@ Annotations:  <none>
 API Version:  cert-manager.io/v1
 Kind:         Certificate
 Metadata:
-  Creation Timestamp:  2022-10-30T17:43:53Z
+  Creation Timestamp:  2022-10-30T19:38:33Z
   Generation:          1
-  Managed Fields:
-    API Version:  cert-manager.io/v1
-    Fields Type:  FieldsV1
-    fieldsV1:
-      f:metadata:
-        f:labels:
-          .:
-          f:app.kubernetes.io/instance:
-        f:ownerReferences:
-          .:
-          k:{"uid":"359a4c56-52ae-4874-9c31-7c4a4df50ca0"}:
-      f:spec:
-        .:
-        f:dnsNames:
-        f:issuerRef:
-          .:
-          f:group:
-          f:kind:
-          f:name:
-        f:secretName:
-        f:usages:
-    Manager:      controller
-    Operation:    Update
-    Time:         2022-10-30T17:43:53Z
-    API Version:  cert-manager.io/v1
-    Fields Type:  FieldsV1
-    fieldsV1:
-      f:status:
-        .:
-        f:conditions:
-        f:nextPrivateKeySecretName:
+
     Manager:      controller
     Operation:    Update
     Subresource:  status
-    Time:         2022-10-30T17:43:53Z
+    Time:         2022-10-30T19:40:34Z
   Owner References:
     API Version:           networking.k8s.io/v1
     Block Owner Deletion:  true
     Controller:            true
     Kind:                  Ingress
     Name:                  echo-ingress
-    UID:                   359a4c56-52ae-4874-9c31-7c4a4df50ca0
-  Resource Version:        13745
-  UID:                     c1ebcd46-f2c0-4aa0-8f2d-e96ad8121f23
+    UID:                   44860053-b2ad-481d-9614-a665c2541b1e
+  Resource Version:        36730
+  UID:                     2e9a72ec-4198-47ff-8689-b35ac5e85a02
 Spec:
   Dns Names:
     echo1.bijubayarea.tk
@@ -511,54 +481,58 @@ Spec:
     key encipherment
 Status:
   Conditions:
-    Last Transition Time:        2022-10-30T17:43:53Z
-    Message:                     Issuing certificate as Secret does not exist
-    Observed Generation:         1
-    Reason:                      DoesNotExist
-    Status:                      True
-    Type:                        Issuing
-    Last Transition Time:        2022-10-30T17:43:53Z
-    Message:                     Issuing certificate as Secret does not exist
-    Observed Generation:         1
-    Reason:                      DoesNotExist
-    Status:                      False
-    Type:                        Ready
-  Next Private Key Secret Name:  http-echo-tls-dhg4s
-Events:                          <none>
+    Last Transition Time:  2022-10-30T19:40:34Z
+    Message:               Certificate is up to date and has not expired
+    Observed Generation:   1
+    Reason:                Ready
+    Status:                True
+    Type:                  Ready
+  Not After:               2023-01-28T18:40:32Z
+  Not Before:              2022-10-30T18:40:33Z
+  Renewal Time:            2022-12-29T18:40:32Z
+  Revision:                1
+Events:
+  Type    Reason     Age    From          Message
+  ----    ------     ----   ----          -------
+  Normal  Issuing    2m56s  cert-manager  Issuing certificate as Secret does not exist
+  Normal  Generated  2m55s  cert-manager  Stored new private key in temporary Secret resource "http-echo-tls-bcshd"
+  Normal  Requested  2m55s  cert-manager  Created new CertificateRequest resource "http-echo-tls-ztsgl"
+  Normal  Issuing    55s    cert-manager  The certificate has been successfully issued
+
 
 $ kubectl get orders
 
-$  kubectl -n http-echo get orders
+$ kubectl -n http-echo get orders
 NAME                             STATE   AGE
-http-echo-tls-x5sk4-2650895051   valid   67m
+http-echo-tls-ztsgl-2650895051   valid   3m51s
 
 
-$ kubectl -n http-echo describe orders http-echo-tls-x5sk4-2650895051
-Name:         http-echo-tls-x5sk4-2650895051
+$ kubectl -n http-echo describe orders http-echo-tls-ztsgl-2650895051
+Name:         http-echo-tls-ztsgl-2650895051
 Namespace:    http-echo
 Labels:       app.kubernetes.io/instance=http-echo
 Annotations:  cert-manager.io/certificate-name: http-echo-tls
               cert-manager.io/certificate-revision: 1
-              cert-manager.io/private-key-secret-name: http-echo-tls-dhg4s
+              cert-manager.io/private-key-secret-name: http-echo-tls-bcshd
 API Version:  acme.cert-manager.io/v1
 Kind:         Order
 Metadata:
-  Creation Timestamp:  2022-10-30T17:43:54Z
+  Creation Timestamp:  2022-10-30T19:38:34Z
   Generation:          1
 
     Manager:      controller
     Operation:    Update
     Subresource:  status
-    Time:         2022-10-30T18:50:11Z
+    Time:         2022-10-30T19:40:34Z
   Owner References:
     API Version:           cert-manager.io/v1
     Block Owner Deletion:  true
     Controller:            true
     Kind:                  CertificateRequest
-    Name:                  http-echo-tls-x5sk4
-    UID:                   9c518b14-fd47-47a9-bbf1-52e61352946c
-  Resource Version:        26003
-  UID:                     5a828341-42fa-4dd9-afd2-982293703406
+    Name:                  http-echo-tls-ztsgl
+    UID:                   5c8384a4-dbde-4f44-a5be-658900427ef3
+  Resource Version:        36709
+  UID:                     49abbc2b-053a-42a2-af0f-aaf43728eda4
 Spec:
   Dns Names:
     echo1.bijubayarea.tk
@@ -567,54 +541,50 @@ Spec:
     Group:  cert-manager.io
     Kind:   ClusterIssuer
     Name:   letsencrypt-prod
-
+  Request:  
 Status:
   Authorizations:
     Challenges:
-      Token:        JN54gD_jy9wzAeHXPFJqsf57ItgF4oHlsWbH1LRKDrw
+      Token:        qBdBScMWHuuMqfE11rFM9XF99-7nzHu1IJpUWTyurvo
       Type:         http-01
-      URL:          https://acme-v02.api.letsencrypt.org/acme/chall-v3/170485759642/yYKHlA
-      Token:        JN54gD_jy9wzAeHXPFJqsf57ItgF4oHlsWbH1LRKDrw
+      URL:          https://acme-v02.api.letsencrypt.org/acme/chall-v3/170511270132/3pEBjA
+      Token:        qBdBScMWHuuMqfE11rFM9XF99-7nzHu1IJpUWTyurvo
       Type:         dns-01
-      URL:          https://acme-v02.api.letsencrypt.org/acme/chall-v3/170485759642/yTVRZg
-      Token:        JN54gD_jy9wzAeHXPFJqsf57ItgF4oHlsWbH1LRKDrw
+      URL:          https://acme-v02.api.letsencrypt.org/acme/chall-v3/170511270132/U7rydQ
+      Token:        qBdBScMWHuuMqfE11rFM9XF99-7nzHu1IJpUWTyurvo
       Type:         tls-alpn-01
-      URL:          https://acme-v02.api.letsencrypt.org/acme/chall-v3/170485759642/ZzZ-sg
+      URL:          https://acme-v02.api.letsencrypt.org/acme/chall-v3/170511270132/qmJBcw
     Identifier:     echo1.bijubayarea.tk
     Initial State:  pending
-    URL:            https://acme-v02.api.letsencrypt.org/acme/authz-v3/170485759642
+    URL:            https://acme-v02.api.letsencrypt.org/acme/authz-v3/170511270132
     Wildcard:       false
     Challenges:
-      Token:        qKJgViu6m-rIJUP_fPFlehaGmrCzbyQqI0JMUMfajTQ
+      Token:        ZwoaayhcNDbBWYrPMltjjub6HHppovgZkGDh_i5CJJ4
       Type:         http-01
-      URL:          https://acme-v02.api.letsencrypt.org/acme/chall-v3/170485759652/SDG-HA
-      Token:        qKJgViu6m-rIJUP_fPFlehaGmrCzbyQqI0JMUMfajTQ
-      Type:         dns-01
-      URL:          https://acme-v02.api.letsencrypt.org/acme/chall-v3/170485759652/x5NcoQ
-      Token:        qKJgViu6m-rIJUP_fPFlehaGmrCzbyQqI0JMUMfajTQ
-      Type:         tls-alpn-01
-      URL:          https://acme-v02.api.letsencrypt.org/acme/chall-v3/170485759652/pXbapA
+      URL:          https://acme-v02.api.letsencrypt.org/acme/chall-v3/170511270142/6RQ5Mg
     Identifier:     echo2.bijubayarea.tk
-    Initial State:  pending
-    URL:            https://acme-v02.api.letsencrypt.org/acme/authz-v3/170485759652
+    Initial State:  valid
+    URL:            https://acme-v02.api.letsencrypt.org/acme/authz-v3/170511270142
     Wildcard:       false
-....
-....
-....
+  Certificate:      
+  Finalize URL:     https://acme-v02.api.letsencrypt.org/acme/finalize/801601932/139424283242
+  State:            valid
+  URL:              https://acme-v02.api.letsencrypt.org/acme/order/801601932/139424283242
 Events:
-  Type    Reason    Age   From          Message
-  ----    ------    ----  ----          -------
-  Normal  Complete  97s   cert-manager  Order completed successfully
+  Type    Reason    Age    From          Message
+  ----    ------    ----   ----          -------
+  Normal  Created   4m26s  cert-manager  Created Challenge resource "http-echo-tls-ztsgl-2650895051-4074663538" for domain "echo1.bijubayarea.tk"
+  Normal  Complete  2m28s  cert-manager  Order completed successfully
 
 
 $  kubectl -n website get cert
 NAME          READY   SECRET        AGE
-website-tls   True    website-tls   69m
+website-tls   True    website-tls   5m33s
 
 
-$  kubectl -n website get orders
+$ kubectl -n website get orders
 NAME                           STATE   AGE
-website-tls-gwvbb-2139627901   valid   70m
+website-tls-fg25f-2139627901   valid   5m42s
 ```
 
 ## Results:
@@ -637,7 +607,7 @@ https://https://website.bijubayarea.tk/
 ```
 ![](https://github.com/bijubayarea/argocd-k8s-aws-route53-external-dns-ingress-tls/blob/main/images/personal_website_tls.png)
 
-## Verify Route53 is updated with DNS entry
+## Verify Route53 is AUTO updated with DNS entry
 
 pod external-dns will auto add a DNS A record in hosted zone for the hostname defined in ingress
 Check if the ELB load balancer names is correct entry for the DNS A Record
@@ -680,7 +650,7 @@ ingress-nginx-controller   LoadBalancer   172.20.78.181   ae2461394216a4ccdaf93f
 
 ## Debug External DNS
 
- problem with the DNS records after 300 seconds or 5 minutes we could check the External DNS pod Logs.
+ if any problem with the DNS records after 300 seconds or 5 minutes we could check the External DNS pod Logs.
  ```
 k logs  -n external-dns external-dns-5784c4bc77-s5dkf
 

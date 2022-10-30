@@ -130,7 +130,7 @@ Install the App-set either using following ARGO CLI or from  web interface from 
 
 argocd app create boot-strap --project default --sync-policy auto --auto-prune --sync-option CreateNamespace=true \
      --repo https://github.com/bijubayarea/argocd-k8s-aws-route53-external-dns-ingress-tls.git \
-     --path ./application-set/boot-strap-app-set/  \
+     --path ./argocd-application-set/boot-strap-app-set/  \
      --dest-server https://kubernetes.default.svc --dest-namespace argocd 
 
 
@@ -275,6 +275,7 @@ echo1
 
 
 
+
 ## Deploy ArgoCD App-set (`httpecho-app-set`) for test http-echo: 
 
 See app-set at `repoURL: https://github.com/bijubayarea/argocd-k8s-aws-route53-external-dns-ingress-tls.git/application-set/boot-strap-app-set/boot-strap-app-set.yaml`
@@ -297,7 +298,7 @@ App-set provisions : namespace, deployment, service and ingress
 
  argocd app create test-apps --project default --sync-policy auto --auto-prune --sync-option CreateNamespace=true \
       --repo https://github.com/bijubayarea/argocd-k8s-aws-route53-external-dns-ingress-tls.git \
-      --path ./application-set/test-app-set/  \
+      --path ./argocd-application-set/test-app-set/  \
       --dest-server https://kubernetes.default.svc --dest-namespace argocd 
 
 ```
@@ -543,6 +544,14 @@ https://https://website.bijubayarea.tk/
 
 ```
 ![](https://github.com/bijubayarea/argocd-k8s-aws-route53-external-dns-ingress-tls/blob/main/images/personal_website_tls.png)
+
+## Verify Route53 is updated with DNS entry
+
+pod external-dns will auto add a DNS A record in hosted zone for the hostname defined in ingress
+Check if the ELB load balancer names is correct entry for the DNS A Record
+
+![](https://github.com/bijubayarea/argocd-k8s-aws-route53-external-dns-ingress-tls/blob/main/images/route53_auto_update.png)
+
 
 ## Debug External DNS
 

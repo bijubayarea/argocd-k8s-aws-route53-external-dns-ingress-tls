@@ -679,6 +679,7 @@ Use either argocd CLI or argoCd GUI to delete infra
 
 ```
 argocd app delete test-apps
+** Allow 5 mins for external-dns to delete A record from Route53 **
 argocd app delete boot-strap
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "ClusterIP"}}'
 

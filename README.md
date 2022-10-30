@@ -682,19 +682,26 @@ ingress-nginx-controller   LoadBalancer   172.20.78.181   ae2461394216a4ccdaf93f
 
  problem with the DNS records after 300 seconds or 5 minutes we could check the External DNS pod Logs.
  ```
-> k logs external-dns-pod -n kube-system -f
-time="2022-01-19T04:16:07Z" level=info msg="All records are already up to date"
-time="2022-01-19T04:17:09Z" level=info msg="Desired change: CREATE testing-nginx.example.com A [Id: /hostedzone/Z02855792S1GV7JKSYHM5]"
-time="2022-01-19T04:17:09Z" level=info msg="Desired change: CREATE testing-nginx.example.com TXT [Id: /hostedzone/Z02855792S1GV7JKSYHM5]"
-time="2022-01-19T04:17:09Z" level=info msg="2 record(s) in zone example.com. [Id: /hostedzone/Z02855792S1GV7JKSYHM5] were successfully updated"
-time="2022-01-19T04:18:08Z" level=info msg="All records are already up to date"
+k logs  -n external-dns external-dns-5784c4bc77-s5dkf
+
+time="2022-10-30T18:41:00Z" level=info msg="Instantiating new Kubernetes client"
+time="2022-10-30T18:41:00Z" level=info msg="Using inCluster-config based on serviceaccount-token"
+time="2022-10-30T18:41:00Z" level=info msg="Created Kubernetes client https://172.20.0.1:443"
+time="2022-10-30T18:41:06Z" level=info msg="Applying provider record filter for domains: [bijubayarea.tk. .bijubayarea.tk.]"
+time="2022-10-30T18:41:06Z" level=info msg="Desired change: CREATE echo1.bijubayarea.tk A [Id: /hostedzone/Z0401868YSGSUUY2AFTH]"
+time="2022-10-30T18:41:06Z" level=info msg="Desired change: CREATE echo1.bijubayarea.tk TXT [Id: /hostedzone/Z0401868YSGSUUY2AFTH]"
+time="2022-10-30T18:41:06Z" level=info msg="Desired change: CREATE echo2.bijubayarea.tk A [Id: /hostedzone/Z0401868YSGSUUY2AFTH]"
+time="2022-10-30T18:41:06Z" level=info msg="Desired change: CREATE echo2.bijubayarea.tk TXT [Id: /hostedzone/Z0401868YSGSUUY2AFTH]"
+time="2022-10-30T18:41:06Z" level=info msg="Desired change: CREATE website.bijubayarea.tk A [Id: /hostedzone/Z0401868YSGSUUY2AFTH]"
+time="2022-10-30T18:41:06Z" level=info msg="Desired change: CREATE website.bijubayarea.tk TXT [Id: /hostedzone/Z0401868YSGSUUY2AFTH]"
+time="2022-10-30T18:41:06Z" level=info msg="6 record(s) in zone bijubayarea.tk. [Id: /hostedzone/Z0401868YSGSUUY2AFTH] were successfully updated"
  ```
 ## Conclusion
 
 In this guide, you set up an Nginx Ingress to load balance and route external requests to backend Services inside of your Kubernetes cluster. 
 You also secured the Ingress by installing the cert-manager certificate provisioner and setting up a Let’s Encrypt certificate for two host paths.
 
-External DNS also takes cares of picking up any new hostnames from new Ingress and update A record of hostname in Route53 with new 
+External DNS also takes cares of picking up any new hostnames from new Ingress and update A record of hostname in Route53 with new hostnames
 
 ## To delete argoCD app:
 

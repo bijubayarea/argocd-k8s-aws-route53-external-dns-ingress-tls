@@ -675,7 +675,7 @@ time="2022-10-30T18:41:06Z" level=info msg="6 record(s) in zone bijubayarea.tk. 
 ## Conclusion
 
 In this guide, you set up an Nginx Ingress to load balance and route external requests to backend Services inside of your Kubernetes cluster. 
-You also secured the Ingress by installing the cert-manager certificate provisioner and setting up a Let’s Encrypt certificate for two host paths.
+You also secured the Ingress by installing the cert-manager certificate provisioner and setting up a Let’s Encrypt certificate for three host paths(echo1, echo2 & website)
 
 External DNS also takes cares of picking up any new hostnames from new Ingress and update A record of hostname in Route53 with new hostnames
 

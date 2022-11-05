@@ -616,7 +616,7 @@ https://https://website.bijubayarea.tk/
 ## Verify Route53 is AUTO updated with DNS entry
 
 pod external-dns will auto add a DNS A record in hosted zone for the hostname defined in ingress
-Check if the ELB load balancer names is correct entry for the DNS A Record
+Check if the ELB load balancer names is correct in the entry for the DNS A Record
 
 ![](https://github.com/bijubayarea/argocd-k8s-aws-route53-external-dns-ingress-tls/blob/main/images/Route53_config.png)
 
@@ -643,10 +643,10 @@ time="2022-10-30T18:41:06Z" level=info msg="Desired change: CREATE website.bijub
 time="2022-10-30T18:41:06Z" level=info msg="6 record(s) in zone bijubayarea.tk. [Id: /hostedzone/Z0401868YSGSUUY2AFTH] were successfully updated"
 ```
 
-A record for DNS Hosts (echo1.bijubayarea.tk, echo2.bijubayarea.tk and website.bijubayarea.tk) updated with correct 
+`A` record for DNS Hosts (echo1.bijubayarea.tk, echo2.bijubayarea.tk and website.bijubayarea.tk) updated with correct 
 Load balancer of ingress controller. All incoming traffic for these DNS hostnames get routes to ingress controller
 
-Check A Recors has correct hostname and LB
+Check `A` Record has correct hostname and LB
 
 ```
 $ k get svc -n ingress-nginx ingress-nginx-controller
@@ -674,10 +674,10 @@ time="2022-10-30T18:41:06Z" level=info msg="6 record(s) in zone bijubayarea.tk. 
  ```
 ## Conclusion
 
-In this guide, you set up an Nginx Ingress to load balance and route external requests to backend Services inside of your Kubernetes cluster. 
+In this guide, you set up an Nginx Ingress to load balance and route external requests to backend Services, inside of your Kubernetes cluster. 
 You also secured the Ingress by installing the cert-manager certificate provisioner and setting up a Let’s Encrypt certificate for three host paths(echo1, echo2 & website)
 
-External DNS also takes cares of picking up any new hostnames from new Ingress and update A record of hostname in Route53 with new hostnames
+External DNS also takes cares of picking up any new hostnames from new Ingress and update `A` record of hostname in Route53 with new hostnames
 
 ## To delete argoCD app:
 
